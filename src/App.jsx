@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+
+import "./App.css";
+import axios from "axios";
+import PokeCard from "./components/PokeCard";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [pokemons, setPokemons] = useState([]);
+  const url = "https://pokeapi.co/api/v2/pokemon/?limit=10&offset=21";
+
+  useEffect(() => {
+    /** 포켓몬 데이터 리스트 */
+    const fetchPokemonData = async () => {
+      try {
+        const res = await axios.get(url);
+        console.log(res.data.results);
+        setPokemons(res.data.results);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchPokemonData();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <article className="pt-6">
+      <header className="flex flex-col gap-2 w-full px-4 z-50">
+        input from
+      </header>
+      <section className="pt-6 flex flex-col justify-content items-center overflow-auto z-0">
+        <div className="flex flex-row flex-wrap gap-[16px] items-center justify-center px-2 max-w-4xl">
+          {pokemons.length > 0 ? (
+            pokemons.map(({ url, name }, index) => (
+              <PokeCard url={url} name={name} key={index} />
+            ))
+          ) : (
+            <h2 className="font-medium text-lg text-slate-900 mb-1">
+              포켓몬이 없습니다.
+            </h2>
+          )}
+        </div>
+      </section>
+    </article>
+  );
 }
 
-export default App
+export default App;
