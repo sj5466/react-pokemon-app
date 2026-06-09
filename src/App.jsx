@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
 import PokeCard from "./components/PokeCard";
+import SetColors from "./components/SetColors";
 
 function App() {
   const [pokemons, setPokemons] = useState([]);
@@ -13,7 +14,7 @@ function App() {
     const fetchPokemonData = async () => {
       try {
         const res = await axios.get(url);
-        console.log(res.data.results);
+        // console.log(res.data.results);
         setPokemons(res.data.results);
       } catch (err) {
         console.log(err);
@@ -25,6 +26,7 @@ function App() {
 
   return (
     <article className="pt-6">
+      <SetColors />
       <header className="flex flex-col gap-2 w-full px-4 z-50">
         input from
       </header>
