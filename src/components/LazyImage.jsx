@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import LoadingSpinner from "./LoadingSpinner";
 
 const LazyImage = ({ url, alt }) => {
-  const [isLoading, setIsLoading] = useState(true);
-
   return (
     <div className="relative w-full h-full">
       <img
@@ -11,11 +9,8 @@ const LazyImage = ({ url, alt }) => {
         alt={alt}
         width="100%"
         height="auto"
-        onLoad={() => {
-          setIsLoading(false);
-        }}
         className={`object-contain h-full transition-opacity duration-300 ${
-          isLoading ? "opacity-0" : "opacity-100"
+          !url ? "opacity-0" : "opacity-100"
         }`}
       />
     </div>
