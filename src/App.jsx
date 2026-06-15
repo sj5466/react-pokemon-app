@@ -9,6 +9,8 @@ import SkeletonCard from "./components/SkeletonCard";
 function App() {
   const [pokemons, setPokemons] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const limit = 10;
 
   // offset을 ref로 관리
@@ -31,11 +33,52 @@ function App() {
     fetchPokemonData(true);
   }, []);
 
+  const handleSearchInput = async (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    if (value.length > 0) {
+      try {
+        const res = await axios.get(
+          `https://pokeapi.co/api/v2/pokemon/${value}`,
+        );
+        const pokemonData = {
+          url: `https://pokeapi.co/api/v2/pokemon/${res.data.id}`,
+          name: value,
+        };
+        setPokemons([pokemonData]);
+      } catch (error) {
+        setPokemons([]);
+        console.log(error);
+      }
+    } else {
+      fetchPokemonData(true);
+    }
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <article className="pt-6">
       <SetColors />
       <header className="flex flex-col gap-2 w-full px-4 z-50">
-        input from
+        <div className="relative z-50">
+          <form onSubmit={handleFormSubmit} className="relative flex justify-center items-center w-[20.5rem] h-6 rounded-lg m-auto">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={handleSearchInput}
+              className="text-xs w-[20.5rem] h-6 px-2 py-1 bg-[hsl(214,13%,47%)] rounded-lg text-gray-300 text-center"
+            />
+            <button
+              type="submit"
+              className="text-xs bg-slate-900 text-slate-300 w-[2.5rem] h-6 px-2 py-1 rounded-r-lg text-center absolute right-0 hover:bg-slate-700"
+            >
+              검색
+            </button>
+          </form>
+        </div>
       </header>
       <section className="pt-6 flex flex-col justify-content items-center overflow-auto z-0">
         <div className="flex flex-row flex-wrap gap-[16px] items-center justify-center px-2 max-w-4xl">
